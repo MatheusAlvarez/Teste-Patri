@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist de Patrimônio - Laboratório C01</title>
+
+  <style>
+    :root {
+      --primary: #1d4ed8;
+      --primary-light: #dbeafe;
+      --success: #15803d;
+      --background: #f1f5f9;
+      --surface: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background: var(--background);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .container {
+      max-width: 1050px;
+      margin: auto;
+    }
+
+    header {
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    header p {
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      background: var(--surface);
+      padding: 18px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .stat span {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .stat strong {
+      font-size: 28px;
+    }
+
+    .panel {
+      background: var(--surface);
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .progress-track {
+      height: 12px;
+      background: #e2e8f0;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: var(--success);
+      transition: width 0.25s ease;
+    }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    input[type="search"],
+    select {
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 14px;
+      background: white;
+    }
+
+    input[type="search"] {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    button {
+      cursor: pointer;
+      padding: 11px 15px;
+      border: 0;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: var(--text);
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .list-header h2 {
+      font-size: 19px;
+      margin: 0;
+    }
+
+    .item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px 12px;
+      border-bottom: 1px solid var(--border);
+      border-radius: 6px;
+    }
+
+    .item:last-child {
+      border-bottom: 0;
+    }
+
+    .item:hover {
+      background: #f8fafc;
+    }
+
+    .item.checked {
+      background: #f0fdf4;
+    }
+
+    .item input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin: 2px 0 0;
+      cursor: pointer;
+      accent-color: var(--success);
+      flex-shrink: 0;
+    }
+
+    .item-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .patrimonio {
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .descricao {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .item.checked .patrimonio {
+      color: var(--success);
+    }
+
+    .status {
+      font-size: 11px;
+      padding: 5px 8px;
+      border-radius: 20px;
+      white-space: nowrap;
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .item.checked .status {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .empty {
+      padding: 30px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    footer {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 14px;
+      }
+
+      header h1 {
+        font-size: 23px;
+      }
+
+      .dashboard {
+        gap: 8px;
+      }
+
+      .stat {
+        padding: 12px;
+      }
+
+      .stat strong {
+        font-size: 23px;
+      }
+
+      .stat span {
+        font-size: 11px;
+      }
+
+      .panel {
+        padding: 12px;
+      }
+
+      .status {
+        display: none;
+      }
+
+      .list-header {
+        align-items: flex-start;
+      }
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: white;
+      }
+
+      .filters,
+      footer,
+      .status {
+        display: none !important;
+      }
+
+      .panel,
+      .stat {
+        border: 1px solid #ccc;
+        break-inside: avoid;
+      }
+
+      .item {
+        break-inside: avoid;
+      }
+
+      .item.checked {
+        background: white;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <header>
+      <h1>Checklist de Patrimônio</h1>
+      <p>
+        <strong>Local:</strong> Laboratório C01<br>
+        <strong>Descrição:</strong>
+        Cadeira giratória sem braços - vinil azul
+      </p>
+    </header>
+
+    <section class="dashboard">
+      <div class="stat">
+        <span>Total de itens</span>
+        <strong id="total">40</strong>
+      </div>
+
+      <div class="stat">
+        <span>Conferidos</span>
+        <strong id="conferidos">0</strong>
+      </div>
+
+      <div class="stat">
+        <span>Pendentes</span>
+        <strong id="pendentes">40</strong>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="progress-info">
+        <span>Progresso da conferência</span>
+        <strong id="percentual">0%</strong>
+      </div>
+
+      <div
+        class="progress-track"
+        role="progressbar"
+        aria-label="Progresso da conferência"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+        id="progressTrack"
+      >
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="filters">
+        <input
+          type="search"
+          id="busca"
+          placeholder="Pesquisar número do patrimônio..."
+          aria-label="Pesquisar patrimônio"
+        >
+
+        <select id="filtro" aria-label="Filtrar itens">
+          <option value="todos">Todos os itens</option>
+          <option value="pendentes">Somente pendentes</option>
+          <option value="conferidos">Somente conferidos</option>
+        </select>
+      </div>
+
+      <div class="list-header">
+        <h2>Lista de bens</h2>
+        <span id="resultado" aria-live="polite">40 itens</span>
+      </div>
+
+      <div id="lista"></div>
+
+      <footer>
+        <button class="btn-primary" id="marcarVisiveis">
+          Marcar visíveis
+        </button>
+
+        <button class="btn-secondary" id="desmarcarVisiveis">
+          Desmarcar visíveis
+        </button>
+
+        <button class="btn-secondary" id="exportar">
+          Exportar CSV
+        </button>
+
+        <button class="btn-secondary" id="imprimir">
+          Imprimir / Salvar PDF
+        </button>
+
+        <button class="btn-danger" id="limpar">
+          Limpar conferência
+        </button>
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    const primeiroPatrimonio = 1372498;
+    const ultimoPatrimonio = 1372537;
+
+    const descricao =
+      "CADEIRA GIRATÓRIA S/BRAÇOS - VINIL AZUL";
+
+    const local = "Laboratório C01";
+
+    const bens = Array.from(
+      { length: ultimoPatrimonio - primeiroPatrimonio + 1 },
+      (_, indice) => ({
+        patrimonio: primeiroPatrimonio + indice,
+        descricao,
+        local,
+        conferido: false
+      })
+    );
+
+    const lista = document.getElementById("lista");
+    const busca = document.getElementById("busca");
+    const filtro = document.getElementById("filtro");
+
+    function obterItensVisiveis() {
+      const termo = busca.value.trim().toLowerCase();
+
+      return bens.filter((bem) => {
+        const correspondeBusca =
+          String(bem.patrimonio).includes(termo) ||
+          bem.descricao.toLowerCase().includes(termo) ||
+          bem.local.toLowerCase().includes(termo);
+
+        const correspondeFiltro =
+          filtro.value === "todos" ||
+          (filtro.value === "pendentes" && !bem.conferido) ||
+          (filtro.value === "conferidos" && bem.conferido);
+
+        return correspondeBusca && correspondeFiltro;
+      });
+    }
+
+    function renderizar() {
+      const itens = obterItensVisiveis();
+
+      lista.innerHTML = "";
+
+      if (itens.length === 0) {
+        lista.innerHTML =
+          '<div class="empty">Nenhum item encontrado.</div>';
+      }
+
+      itens.forEach((bem) => {
+        const item = document.createElement("label");
+        item.className = "item" +
+          (bem.conferido ? " checked" : "");
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = bem.conferido;
+        checkbox.setAttribute(
+          "aria-label",
+          "Conferir patrimônio " + bem.patrimonio
+        );
+
+        checkbox.addEventListener("change", () => {
+          bem.conferido = checkbox.checked;
+          renderizar();
+        });
+
+        const conteudo = document.createElement("div");
+        conteudo.className = "item-content";
+
+        const codigo = document.createElement("div");
+        codigo.className = "patrimonio";
+        codigo.textContent = bem.patrimonio;
+
+        const detalhes = document.createElement("div");
+        detalhes.className = "descricao";
+        detalhes.textContent = bem.descricao + " · " + bem.local;
+
+        const status = document.createElement("span");
+        status.className = "status";
+        status.textContent = bem.conferido
+          ? "Conferido"
+          : "Pendente";
+
+        conteudo.append(codigo, detalhes);
+        item.append(checkbox, conteudo, status);
+        lista.appendChild(item);
+      });
+
+      atualizarResumo(itens.length);
+    }
+
+    function atualizarResumo(quantidadeVisivel) {
+      const total = bens.length;
+      const conferidos = bens.filter(
+        bem => bem.conferido
+      ).length;
+
+      const pendentes = total - conferidos;
+      const percentual = Math.round(
+        (conferidos / total) * 100
+      );
+
+      document.getElementById("total").textContent = total;
+      document.getElementById("conferidos").textContent =
+        conferidos;
+      document.getElementById("pendentes").textContent =
+        pendentes;
+      document.getElementById("percentual").textContent =
+        percentual + "%";
+
+      document.getElementById("progressBar").style.width =
+        percentual + "%";
+
+      const barra = document.getElementById("progressTrack");
+      barra.setAttribute("aria-valuenow", percentual);
+
+      document.getElementById("resultado").textContent =
+        quantidadeVisivel + " de " + total + " itens";
+    }
+
+    function alterarVisiveis(conferido) {
+      obterItensVisiveis().forEach((bem) => {
+        bem.conferido = conferido;
+      });
+
+      renderizar();
+    }
+
+    busca.addEventListener("input", renderizar);
+    filtro.addEventListener("change", renderizar);
+
+    document.getElementById("marcarVisiveis")
+      .addEventListener("click", () => alterarVisiveis(true));
+
+    document.getElementById("desmarcarVisiveis")
+      .addEventListener("click", () => alterarVisiveis(false));
+
+    document.getElementById("imprimir")
+      .addEventListener("click", () => window.print());
+
+    document.getElementById("limpar")
+      .addEventListener("click", () => {
+        const confirmou = confirm(
+          "Deseja desmarcar todos os 40 patrimônios?"
+        );
+
+        if (!confirmou) return;
+
+        bens.forEach(bem => bem.conferido = false);
+        renderizar();
+      });
+
+    document.getElementById("exportar")
+      .addEventListener("click", () => {
+        const linhas = [
+          ["Patrimônio", "Descrição", "Local", "Status"],
+          ...bens.map(bem => [
+            bem.patrimonio,
+            bem.descricao,
+            bem.local,
+            bem.conferido ? "Conferido" : "Pendente"
+          ])
+        ];
+
+        const csv = "\uFEFF" + linhas.map(linha =>
+          linha.map(valor =>
+            '"' + String(valor).replace(/"/g, '""') + '"'
+          ).join(";")
+        ).join("\r\n");
+
+        const arquivo = new Blob([csv], {
+          type: "text/csv;charset=utf-8;"
+        });
+
+        const url = URL.createObjectURL(arquivo);
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download = "checklist_laboratorio_C01.csv";
+        link.click();
+
+        URL.revokeObjectURL(url);
+      });
+
+    renderizar();
+  </script>
+</body>
+</html>
